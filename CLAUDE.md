@@ -85,7 +85,7 @@ Toutes les commandes CLI (Composer, Symfony Console, PHPUnit) doivent être exé
 
 ## 6. Agents spécialisés
 
-Déléguer aux sous-agents de `.claude/agents/` (règles de choix : `.claude/models.md`) :
+Déléguer aux sous-agents de `.claude/agents/` (règles de choix et enchaînements types — nouvelle fonctionnalité, correction de bug, préproduction : `.claude/models.md` ; en cas de doute entre deux niveaux, prendre le plus élevé) :
 - Haiku : `verificateur` (tests + lint), `redacteur-docs`, `admin-crud` (EasyAdmin simple)
 - Sonnet : `dev-symfony`, `migrations`, `testeur`, `devops`
 - Opus : `architecte`, `auditeur-securite`, `debogueur`

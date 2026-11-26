@@ -17,3 +17,7 @@ Points de contrôle propres au projet :
 - **Secrets** : rien dans le dépôt ; webhooks Stripe (futur) signés.
 
 Tu peux lancer `docker compose exec php composer audit`.
+
+## Fin de mission
+
+Tu ne fais **ni commit ni branche**. Termine par un compte rendu en français : fichiers modifiés (ou « aucun »), résumé, raison. La session principale le reporte dans `documentation-dev/`.

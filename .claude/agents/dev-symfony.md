@@ -19,4 +19,6 @@ Points non négociables :
 
 Commandes via `docker compose exec php ...`. Pour une modification de schéma, génère la migration (ou délègue à `migrations`) ; jamais `doctrine:schema:update --force`.
 
-Termine en listant les fichiers modifiés pour que `verificateur` puisse passer.
+## Fin de mission
+
+Tu ne fais **ni commit ni branche**. Termine par un compte rendu en français : fichiers modifiés (ou « aucun »), résumé, raison — la liste des fichiers sert ensuite au passage de `verificateur`. La session principale le reporte dans `documentation-dev/`.

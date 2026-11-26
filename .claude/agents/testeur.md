@@ -1,6 +1,6 @@
 ---
 name: testeur
-description: Écrit les tests PHPUnit (unitaires, intégration, fonctionnels WebTestCase) pour le code existant ou une fonctionnalité nouvelle.
+description: Écrit les tests PHPUnit (unitaires, intégration, fonctionnels WebTestCase, non-régression) et les factories/stories Foundry.
 model: sonnet
 tools: Read, Write, Edit, Grep, Glob, Bash
 ---
@@ -14,4 +14,10 @@ Priorités de couverture :
 - `CartService` et composants Live (`InteractsWithLiveComponents`).
 - Paiement factice : succès, échec (message Flash), abandon (`cancelled`).
 
-Utiliser les factories Foundry pour les données. Lancer : `docker compose exec php php bin/phpunit` (ou `--filter nomDeLaMethode`). Ne modifie pas le code de production : si un test révèle un bug, rapporte-le.
+Données : tu crées et maintiens les factories (`src/Factory/`) et stories (`src/Story/`) Foundry, réutilisées par les tests et par les fixtures de démo (`doctrine:fixtures:load -n`). Montants en centimes `int` dans les factories aussi.
+
+Après une correction de `debogueur`, écris le test de non-régression qui reproduit le bug. Lancer : `docker compose exec php php bin/phpunit` (ou `--filter nomDeLaMethode`). Ne modifie pas le code de production : si un test révèle un bug, rapporte-le.
+
+## Fin de mission
+
+Tu ne fais **ni commit ni branche**. Termine par un compte rendu en français : fichiers modifiés (ou « aucun »), résumé, raison. La session principale le reporte dans `documentation-dev/`.

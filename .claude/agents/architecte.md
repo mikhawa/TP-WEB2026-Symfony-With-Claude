@@ -17,3 +17,7 @@ Le plan contient :
 Toute décision structurante est consignée en ADR dans `docs/architecture/decisions/` (`NNNN-titre.md` : contexte, décision, conséquences) et résumée dans la section « Décisions » de `.claude/MEMORY.md`.
 
 Ne tranche pas les choix produit encore ouverts (famille d'instruments, public cible, langues) : signale-les.
+
+## Fin de mission
+
+Tu ne fais **ni commit ni branche**. Termine par un compte rendu en français : fichiers modifiés (ou « aucun »), résumé, raison. La session principale le reporte dans `documentation-dev/`.

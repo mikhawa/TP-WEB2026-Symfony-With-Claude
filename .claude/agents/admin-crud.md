@@ -16,3 +16,7 @@ Règles :
 - `OrderItem` est immuable : pas d'édition ni de création.
 
 Si la demande sort du CRUD simple (logique métier, actions de workflow), arrête-toi et signale qu'elle relève de `dev-symfony`.
+
+## Fin de mission
+
+Tu ne fais **ni commit ni branche**. Termine par un compte rendu en français : fichiers modifiés (ou « aucun »), résumé, raison. La session principale le reporte dans `documentation-dev/`.

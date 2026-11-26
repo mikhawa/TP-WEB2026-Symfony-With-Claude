@@ -1,16 +1,36 @@
-# Choix du modèle pour les sous-agents
+# Choix du modèle et de l'agent
 
-Règle générale : prendre le modèle le moins coûteux capable de faire la tâche correctement.
+Règle générale : prendre le modèle **le moins coûteux capable de faire la tâche correctement**. En cas de doute entre deux niveaux, prendre le plus élevé.
 
-| Modèle | Quand l'utiliser | Agents |
-|--------|------------------|--------|
-| **Haiku** | Tâches mécaniques, bien cadrées, sans décision d'architecture : lancer des commandes et rapporter, rédiger de la doc à partir du code, CRUD EasyAdmin simple. | `verificateur`, `redacteur-docs`, `admin-crud` |
-| **Sonnet** | Développement courant : entités, services, contrôleurs, composants Live, migrations, tests, Docker/CI. | `dev-symfony`, `migrations`, `testeur`, `devops` |
-| **Opus** | Raisonnement profond : conception, choix structurants, audit de sécurité, bug dont la cause n'est pas évidente. | `architecte`, `auditeur-securite`, `debogueur` |
+## Haiku — tâches mécaniques, faible risque
 
-## Escalade
+| Agent | Quand l'utiliser |
+|-------|------------------|
+| `verificateur` | Après **toute** modification de code : tests PHPUnit + lints (container, Twig, YAML). Ne corrige rien, rapporte. |
+| `redacteur-docs` | Rédiger ou mettre à jour la documentation (`docs/`, `documentation-dev/`, `README.md`). |
+| `admin-crud` | CRUD EasyAdmin simple sur une entité existante (champs, filtres, menu), sans logique métier. |
 
-- Un agent Haiku qui rencontre une décision de conception s'arrête et la signale au lieu de trancher.
-- Un agent Sonnet qui bloque après deux tentatives sur un bug passe la main à `debogueur`.
-- Toute modification touchant le workflow `order_process`, les montants financiers ou l'authentification passe par `architecte` (conception) puis `auditeur-securite` (relecture).
-- Toute modification de code se termine par `verificateur`.
+## Sonnet — développement courant
+
+| Agent | Quand l'utiliser |
+|-------|------------------|
+| `dev-symfony` | Implémenter une fonctionnalité : entités, services, contrôleurs, Live Components, Twig, workflow. |
+| `migrations` | Créer, relire ou réparer une migration Doctrine ; vérifier la cohérence schéma ↔ entités. |
+| `testeur` | Écrire des tests PHPUnit et des factories/stories Foundry. |
+| `devops` | Docker (`compose.yaml`, `docker/`), Nginx, GitHub Actions, déploiement VPS. |
+
+## Opus — raisonnement profond, décisions structurantes
+
+| Agent | Quand l'utiliser |
+|-------|------------------|
+| `architecte` | Concevoir une fonctionnalité transverse, trancher un choix d'architecture, rédiger un ADR. |
+| `auditeur-securite` | Revue de sécurité (authentification, paiement, uploads, injections, CSRF, contrôle d'accès). |
+| `debogueur` | Bug non trivial, cause inconnue, comportement intermittent, échec que `dev-symfony` n'a pas résolu. |
+
+## Enchaînements types
+
+- Nouvelle fonctionnalité : `architecte` (si structurante) → `dev-symfony` → `migrations` (si schéma modifié) → `testeur` → `verificateur`.
+- Correction de bug : `debogueur` → `testeur` (test de non-régression) → `verificateur`.
+- Avant une mise en préproduction : `auditeur-securite` → `devops` → `verificateur`.
+
+Les agents ne font **ni commit ni branche**. Ils terminent par un compte rendu (fichiers modifiés, résumé, raison) que la session principale reporte dans `documentation-dev/` au format `Agent: <nom> <Modele: <haiku|sonnet|opus>>`.
