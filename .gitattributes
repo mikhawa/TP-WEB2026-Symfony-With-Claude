@@ -1,0 +1,24 @@
+# Normalisation des fins de ligne : LF dans le dépôt et dans la copie de travail
+# (évite les diffs parasites CRLF sous Windows/WSL et les scripts cassés dans Docker)
+* text=auto eol=lf
+
+# Scripts Windows : CRLF obligatoire
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Fichiers binaires : aucune conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.zip binary
+*.gz binary

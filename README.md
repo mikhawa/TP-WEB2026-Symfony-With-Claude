@@ -8,6 +8,15 @@ Choix de la famille ou des sortes d'instruments :
 
 [VOTRE CHOIX]
 
+## Liste des commandes claudes
+
+- [Complètes](https://github.com/WebDevCF2m2026/Cours-Claude-Code-novembre-2026/blob/main/README.md)
+- [Résumé](RESUME.md)
+
+## Plan pour bien débuter
+
+[Plan pour débuter](PLAN.md)
+
 # E-Commerce Sandbox (Symfony 7.4 LTS)
 
 **Objectif** : Présentation d'une famille d'instruments de musique [VOTRE CHOIX] Ce dépôt contient une plateforme e-commerce factice (sandbox / démonstrateur technique) construite avec **Symfony 7.4 LTS**.
