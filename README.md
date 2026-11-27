@@ -13,6 +13,10 @@ Choix de la famille ou des sortes d'instruments :
 - [Complètes](https://github.com/WebDevCF2m2026/Cours-Claude-Code-novembre-2026/blob/main/README.md)
 - [Résumé](RESUME.md)
 
+## Prérequis à installer
+
+[Prérequis à installer pour le projet](PREREQUIS.md)
+
 ## Plan pour bien débuter
 
 [Plan pour débuter](PLAN.md)
