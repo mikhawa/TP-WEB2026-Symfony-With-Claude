@@ -2,6 +2,12 @@
 
 [Retour à l'accueil](README.md)
 
+## Requis préparés en classe
+
+C'est requis seront vu ensemble en classe
+
+### Guide de pré-installation
+
 Ce guide prépare un poste **Windows 11** pour travailler sur le projet : WSL2 + Ubuntu, PHP, Composer, Symfony CLI, Docker Desktop, Git, GitHub, un éditeur et Claude Code.
 
 > **Principe clé** : le projet **s'exécute** dans les conteneurs Docker (`docker compose exec php ...`) : MariaDB, Nginx, phpMyAdmin et Mailpit ne s'installent pas sur la machine. PHP, Composer et Symfony CLI sont **aussi** installés dans WSL pour l'outillage local (éditeur, autocomplétion, `symfony check:requirements`, commandes rapides), mais les commandes du projet restent lancées dans le conteneur `php`.
