@@ -23,7 +23,7 @@ Ces choix bloquent la suite du projet (modèle de données, fixtures, textes) : 
 - [ ] Lister les **langues étrangères** de la future traduction (peut attendre l'étape 13).
 - [ ] Reporter ces décisions dans `.claude/MEMORY.md` (section « Décisions »).
 - [x] Ajouter un `.gitattributes` (fins de ligne LF).
-- [ ] Mettre à jour le « Point de reprise » de `.claude/MEMORY.md` (il indique encore `feature/01-pre-install`).
+- [x] Mettre à jour le « Point de reprise » de `.claude/MEMORY.md` (fait le 2026-11-27, branche `feature/03-install-prerequis`).
 
 ## Étape 1 — Stack Docker de dev
 

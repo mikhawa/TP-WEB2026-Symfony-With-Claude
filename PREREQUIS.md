@@ -2,9 +2,9 @@
 
 [Retour à l'accueil](README.md)
 
-Ce guide prépare un poste **Windows 11** pour travailler sur le projet : WSL2 + Ubuntu, Docker Desktop, Git, GitHub, un éditeur et Claude Code.
+Ce guide prépare un poste **Windows 11** pour travailler sur le projet : WSL2 + Ubuntu, PHP, Composer, Symfony CLI, Docker Desktop, Git, GitHub, un éditeur et Claude Code.
 
-> **Principe clé** : PHP, Composer, Symfony, MariaDB, Nginx… **ne s'installent pas sur la machine**. Ils tournent dans les conteneurs Docker du projet (`docker compose exec php ...`). Sur le poste, il ne faut que : **WSL2 + Ubuntu, Docker, Git, un éditeur et Claude Code**.
+> **Principe clé** : le projet **s'exécute** dans les conteneurs Docker (`docker compose exec php ...`) : MariaDB, Nginx, phpMyAdmin et Mailpit ne s'installent pas sur la machine. PHP, Composer et Symfony CLI sont **aussi** installés dans WSL pour l'outillage local (éditeur, autocomplétion, `symfony check:requirements`, commandes rapides), mais les commandes du projet restent lancées dans le conteneur `php`.
 
 ---
 
@@ -13,14 +13,15 @@ Ce guide prépare un poste **Windows 11** pour travailler sur le projet : WSL2 +
 1. [Vérifier le poste Windows 11](#1--vérifier-le-poste-windows-11)
 2. [Installer WSL2 et Ubuntu](#2--installer-wsl2-et-ubuntu)
 3. [Configurer Ubuntu](#3--configurer-ubuntu)
-4. [Installer Docker Desktop](#4--installer-docker-desktop)
-5. [Installer et configurer Git](#5--installer-et-configurer-git)
-6. [Connecter GitHub (clé SSH)](#6--connecter-github-clé-ssh)
-7. [Cloner le projet](#7--cloner-le-projet)
-8. [Éditeur de code](#8--éditeur-de-code)
-9. [Installer Claude Code](#9--installer-claude-code)
-10. [Vérification finale](#10--vérification-finale)
-11. [Dépannage](#11--dépannage)
+4. [Installer PHP, Composer et Symfony CLI](#4--installer-php-composer-et-symfony-cli)
+5. [Installer Docker Desktop](#5--installer-docker-desktop)
+6. [Installer et configurer Git](#6--installer-et-configurer-git)
+7. [Connecter GitHub (clé SSH)](#7--connecter-github-clé-ssh)
+8. [Cloner le projet](#8--cloner-le-projet)
+9. [Éditeur de code](#9--éditeur-de-code)
+10. [Installer Claude Code](#10--installer-claude-code)
+11. [Vérification finale](#11--vérification-finale)
+12. [Dépannage](#12--dépannage)
 
 ---
 
@@ -99,7 +100,81 @@ Depuis l'Explorateur Windows, les fichiers Ubuntu sont accessibles via `\\wsl$\U
 
 ---
 
-## 4 — Installer Docker Desktop
+## 4 — Installer PHP, Composer et Symfony CLI
+
+### 4.1 PHP 8.4 minimum
+
+Ubuntu 24.04 ne fournit que PHP 8.3 : on ajoute le dépôt **ondrej/php** (référence pour les versions récentes de PHP sur Ubuntu).
+
+```bash
+sudo apt install -y software-properties-common
+sudo add-apt-repository -y ppa:ondrej/php
+sudo apt update
+```
+
+Installer PHP **8.4** (minimum exigé) et les extensions utiles à Symfony :
+
+```bash
+sudo apt install -y php8.4-cli php8.4-common php8.4-intl php8.4-mbstring \
+  php8.4-xml php8.4-curl php8.4-zip php8.4-mysql php8.4-gd php8.4-opcache
+```
+
+> 💡 Le conteneur Docker du projet utilise **PHP 8.5**. Pour avoir la même version en local, remplacer `8.4` par `8.5` dans la commande ci-dessus (si le paquet est disponible : `apt-cache policy php8.5-cli`).
+
+Si plusieurs versions sont installées, choisir celle par défaut :
+
+```bash
+sudo update-alternatives --config php
+```
+
+Vérifier :
+
+```bash
+php -v        # PHP 8.4.x (ou 8.5.x)
+php -m        # liste des extensions (intl, mbstring, pdo_mysql, gd…)
+```
+
+### 4.2 Composer
+
+Installation officielle (<https://getcomposer.org/download/>) :
+
+```bash
+cd ~
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+sudo mv composer.phar /usr/local/bin/composer
+```
+
+> Pour vérifier l'intégrité de l'installeur (somme SHA-384), suivre la commande à jour donnée sur la page officielle ci-dessus.
+
+Vérifier :
+
+```bash
+composer --version   # Composer version 2.x
+```
+
+### 4.3 Symfony CLI
+
+Installation via le dépôt APT officiel de Symfony :
+
+```bash
+curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash
+sudo apt install -y symfony-cli
+```
+
+Vérifier :
+
+```bash
+symfony version
+symfony check:requirements   # doit se terminer par « [OK] Your system is ready to run Symfony projects »
+```
+
+> ⚠️ Pour ce projet, le serveur web est **Nginx dans Docker** (`http://localhost:8000`) : ne pas utiliser `symfony serve`, qui occuperait aussi le port 8000.
+
+---
+
+## 5 — Installer Docker Desktop
 
 1. Télécharger **Docker Desktop pour Windows** : <https://www.docker.com/products/docker-desktop/>
 2. Lancer l'installation en laissant cochée l'option **« Use WSL 2 instead of Hyper-V »**.
@@ -125,9 +200,9 @@ Le message « Hello from Docker! » confirme que tout fonctionne.
 
 ---
 
-## 5 — Installer et configurer Git
+## 6 — Installer et configurer Git
 
-Git est installé à l'étape 3. Le configurer **dans Ubuntu** :
+Git est installé à la section 3. Le configurer **dans Ubuntu** :
 
 ```bash
 git config --global user.name "Prénom Nom"
@@ -153,7 +228,7 @@ gh auth login
 
 ---
 
-## 6 — Connecter GitHub (clé SSH)
+## 7 — Connecter GitHub (clé SSH)
 
 1. Créer un compte sur <https://github.com> si nécessaire.
 2. Générer une clé SSH **dans Ubuntu** :
@@ -175,7 +250,7 @@ gh auth login
 
 ---
 
-## 7 — Cloner le projet
+## 8 — Cloner le projet
 
 **Dans Ubuntu**, dans le dossier personnel Linux :
 
@@ -187,11 +262,11 @@ cd TP-WEB2026-Symfony-With-Claude
 
 Remplacer `<organisation-ou-pseudo>` par le propriétaire du dépôt (ou de votre fork).
 
-Le démarrage de la stack (`docker compose up -d --build`) est décrit dans le [plan](PLAN.md) (étape 1) une fois le `compose.yaml` créé.
+Le démarrage de la stack (`docker compose up -d --build`) est décrit dans le [plan](PLAN.md) (étape 1 du plan) une fois le `compose.yaml` créé.
 
 ---
 
-## 8 — Éditeur de code
+## 9 — Éditeur de code
 
 Au choix, les deux fonctionnent avec WSL :
 
@@ -206,7 +281,7 @@ Au choix, les deux fonctionnent avec WSL :
 
 ---
 
-## 9 — Installer Claude Code
+## 10 — Installer Claude Code
 
 **Dans Ubuntu** :
 
@@ -229,7 +304,7 @@ Les commandes utiles sont listées dans le [résumé](RESUME.md).
 
 ---
 
-## 10 — Vérification finale
+## 11 — Vérification finale
 
 Toutes ces commandes se lancent **dans Ubuntu**, Docker Desktop démarré :
 
@@ -238,6 +313,9 @@ wsl.exe --list --verbose     # Ubuntu en VERSION 2
 docker --version             # Docker version ...
 docker compose version       # Docker Compose version v2...
 docker run --rm hello-world  # Hello from Docker!
+php -v                       # PHP 8.4.x minimum
+composer --version           # Composer version 2.x
+symfony check:requirements   # [OK] Your system is ready...
 git --version                # git version ...
 git config --global user.email
 ssh -T git@github.com        # Hi <pseudo>!
@@ -249,6 +327,7 @@ Checklist :
 
 - [ ] Virtualisation activée
 - [ ] WSL2 + Ubuntu 24.04 installés et à jour
+- [ ] PHP 8.4+ (extensions intl, mbstring, xml, pdo_mysql…), Composer 2 et Symfony CLI installés dans WSL
 - [ ] Docker Desktop installé, intégration WSL activée
 - [ ] Git configuré (nom, email, `autocrlf input`)
 - [ ] Clé SSH ajoutée sur GitHub
@@ -259,17 +338,20 @@ Checklist :
 
 ---
 
-## 11 — Dépannage
+## 12 — Dépannage
 
 | Problème | Solution |
 |---|---|
 | `wsl --install` : erreur de virtualisation (`0x80370102`) | Activer VT-x / AMD-V dans le BIOS, puis relancer. |
 | `docker: command not found` dans Ubuntu | Lancer Docker Desktop et vérifier **Resources → WSL integration** (Ubuntu cochée). Fermer/rouvrir le terminal. |
 | `permission denied ... docker.sock` | Redémarrer Docker Desktop ; en dernier recours `wsl --shutdown` dans PowerShell. |
-| Docker / Symfony très lents | Le projet est sous `/mnt/c/...` : le déplacer dans `~/` (étape 7). |
+| Docker / Symfony très lents | Le projet est sous `/mnt/c/...` : le déplacer dans `~/` (section 8). |
 | `port is already allocated` | Un autre logiciel utilise le port (WAMP, XAMPP, Skype…). L'arrêter. Sous PowerShell : `netstat -ano \| findstr :8000`. |
 | Fichiers modifiés partout dans `git status` (fins de ligne) | Vérifier `core.autocrlf input` (Ubuntu) ; ne pas éditer le dépôt avec Git pour Windows réglé en `true`. |
-| WSL consomme trop de RAM (`vmmem`) | Créer `.wslconfig` (étape 2) puis `wsl --shutdown`. |
+| WSL consomme trop de RAM (`vmmem`) | Créer `.wslconfig` (section 2) puis `wsl --shutdown`. |
+| `add-apt-repository: command not found` | `sudo apt install -y software-properties-common` puis relancer. |
+| `php -v` affiche encore 8.3 | `sudo update-alternatives --config php` et choisir 8.4 (ou 8.5). |
+| `symfony check:requirements` signale une extension manquante | Installer le paquet correspondant, ex. : `sudo apt install -y php8.4-intl`. |
 | Horloge décalée dans WSL après une mise en veille | `sudo hwclock -s` ou `wsl --shutdown`. |
 
 ---
