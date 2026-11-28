@@ -76,19 +76,6 @@ wsl --set-default-version 2
 wsl --set-version Ubuntu-24.04 2
 ```
 
-### (Optionnel) Limiter la mémoire de WSL
-
-Par défaut WSL peut prendre jusqu'à 50 % de la RAM. Créer le fichier `C:\Users\<VotreNom>\.wslconfig` :
-
-```ini
-[wsl2]
-memory=6GB
-processors=4
-swap=2GB
-```
-
-Puis appliquer avec `wsl --shutdown` (dans PowerShell) et rouvrir Ubuntu.
-
 ---
 
 ## 3 — Configurer Ubuntu
@@ -208,6 +195,10 @@ Le message « Hello from Docker! » confirme que tout fonctionne.
 
 ## 6 — Installer et configurer Git
 
+Inutile si vous avez accès à `Git` via le chemin `Windows 11` vers `WSL2` (`\\wsl$\Ubuntu-24.04\home\<utilisateur>`)
+
+Si vous souhaitez l'utiliser via Ubuntu : 
+
 Git est installé à la section 3. Le configurer **dans Ubuntu** :
 
 ```bash
@@ -223,14 +214,6 @@ git config --global pull.rebase false
 
 > Si **Git pour Windows** est aussi installé (pour un éditeur côté Windows), y régler `git config --global core.autocrlf false` pour ne pas convertir les fichiers en CRLF.
 
-### (Optionnel) GitHub CLI
-
-Pratique pour les pull requests et utilisé par Claude Code :
-
-```bash
-sudo apt install -y gh
-gh auth login
-```
 
 ---
 
@@ -264,6 +247,15 @@ gh auth login
 mkdir -p ~/projets && cd ~/projets
 git clone git@github.com:<organisation-ou-pseudo>/TP-WEB2026-Symfony-With-Claude.git
 cd TP-WEB2026-Symfony-With-Claude
+```
+
+**Sans Windows, via le chemin WSL**
+
+```bash
+git clone git@github.com:<organisation-ou-pseudo>/TP-WEB2026-Symfony-With-Claude.git
+cd TP-WEB2026-Symfony-With-Claude
+git status
+# rajoutez l'exception git
 ```
 
 Remplacer `<organisation-ou-pseudo>` par le propriétaire du dépôt (ou de votre fork).
